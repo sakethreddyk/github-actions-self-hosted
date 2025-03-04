@@ -9,14 +9,20 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Copy files to EC2
-        run: |
-          mkdir -p /var/www/html
-          cp index.html /var/www/html/index.html
-
-      - name: Start Web Server
+      - name: Install Apache (if not installed)
         run: |
           sudo apt update
           sudo apt install -y apache2
-          sudo systemctl start apache2
+
+      - name: Set Permissions
+        run: sudo chmod -R 777 /var/www/html
+
+      - name: Copy files to EC2
+        run: |
+          sudo mkdir -p /var/www/html
+          sudo cp index.html /var/www/html/index.html
+
+      - name: Restart Apache Server
+        run: |
+          sudo systemctl restart apache2
           sudo systemctl enable apache2
