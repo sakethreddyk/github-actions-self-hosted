@@ -1,0 +1,22 @@
+name: Deploy Webpage
+
+on: [push]
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Copy files to EC2
+        run: |
+          mkdir -p /var/www/html
+          cp index.html /var/www/html/index.html
+
+      - name: Start Web Server
+        run: |
+          sudo apt update
+          sudo apt install -y apache2
+          sudo systemctl start apache2
+          sudo systemctl enable apache2
